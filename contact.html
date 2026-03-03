@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Aadit Chandra - Contact</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b5bee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101522",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col">
+    <!-- Top Navigation -->
+    <header
+        class="w-full flex items-center justify-between whitespace-nowrap border-b border-slate-200 dark:border-slate-800 px-10 py-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="flex items-center gap-4 text-slate-900 dark:text-white">
+            <div class="size-8 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-xl">landscape</span>
+            </div>
+            <h2 class="text-lg font-bold leading-tight tracking-tight"><a href="index.html">Aadit Chandra</a></h2>
+        </div>
+        <div class="flex flex-1 justify-end gap-8 items-center">
+            <nav class="hidden md:flex items-center gap-9">
+                <a class="text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-white text-sm font-medium transition-colors"
+                    href="index.html#work">Work</a>
+                <a class="text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-white text-sm font-medium transition-colors"
+                    href="index.html#about">About</a>
+                <a class="text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-white text-sm font-medium transition-colors"
+                    href="#">Playground</a>
+                <a class="text-slate-900 font-bold dark:text-white text-sm leading-normal" href="#">Contact</a>
+            </nav>
+            <button
+                class="flex min-w-[100px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-sm font-bold shadow-lg hover:scale-105 transition-transform">
+                <span class="truncate">Resume</span>
+            </button>
+        </div>
+    </header>
+    <!-- Main Content: Centered Layout -->
+    <main class="flex-grow flex flex-col items-center justify-center px-4 py-12 md:py-20 relative overflow-hidden">
+        <!-- Background Elements (Abstract Decoration) -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+            <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/5 rounded-full blur-[120px]">
+            </div>
+        </div>
+        <div class="w-full max-w-[640px] flex flex-col items-center animate-fade-in-up">
+            <!-- Hero Section -->
+            <div class="text-center mb-10">
+                <div
+                    class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-6">
+                    <span class="material-symbols-outlined text-3xl">waving_hand</span>
+                </div>
+                <h1
+                    class="text-slate-900 dark:text-white tracking-tight text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+                    Let's Connect
+                </h1>
+                <p class="text-slate-500 dark:text-slate-400 text-lg font-normal leading-relaxed max-w-md mx-auto">
+                    Feel free to reach out for collaborations or just a friendly hello.
+                </p>
+            </div>
+            <!-- Link Cards Container -->
+            <div class="w-full flex flex-col gap-4">
+                <!-- Email Card -->
+                <a class="group relative flex items-center justify-between p-5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary dark:hover:border-primary transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
+                    href="mailto:hello@aadit.design">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-primary/5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out">
+                    </div>
+                    <div class="flex items-center gap-4 z-10">
+                        <div
+                            class="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
+                            <span class="material-symbols-outlined">mail</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span
+                                class="text-slate-900 dark:text-white font-bold text-lg group-hover:text-primary transition-colors">Email
+                                Me</span>
+                            <span class="text-slate-500 dark:text-slate-400 text-sm">hello@aadit.design</span>
+                        </div>
+                    </div>
+                    <div class="text-slate-300 dark:text-slate-600 group-hover:text-primary transition-colors z-10">
+                        <span class="material-symbols-outlined">arrow_outward</span>
+                    </div>
+                </a>
+                <!-- LinkedIn Card -->
+                <a class="group relative flex items-center justify-between p-5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary dark:hover:border-primary transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
+                    href="#">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-primary/5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out">
+                    </div>
+                    <div class="flex items-center gap-4 z-10">
+                        <div
+                            class="size-12 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-[#0077b5] group-hover:scale-110 transition-transform duration-300">
+                            <!-- Using a generic briefcase for LinkedIn representation with material icons -->
+                            <span class="material-symbols-outlined">work</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span
+                                class="text-slate-900 dark:text-white font-bold text-lg group-hover:text-primary transition-colors">LinkedIn</span>
+                            <span class="text-slate-500 dark:text-slate-400 text-sm">Professional Profile</span>
+                        </div>
+                    </div>
+                    <div class="text-slate-300 dark:text-slate-600 group-hover:text-primary transition-colors z-10">
+                        <span class="material-symbols-outlined">arrow_outward</span>
+                    </div>
+                </a>
+                <!-- GitHub Card -->
+                <a class="group relative flex items-center justify-between p-5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary dark:hover:border-primary transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
+                    href="#">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-primary/5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out">
+                    </div>
+                    <div class="flex items-center gap-4 z-10">
+                        <div
+                            class="size-12 rounded-lg bg-gray-50 dark:bg-gray-800 flex items-center justify-center text-slate-800 dark:text-white group-hover:scale-110 transition-transform duration-300">
+                            <span class="material-symbols-outlined">code</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span
+                                class="text-slate-900 dark:text-white font-bold text-lg group-hover:text-primary transition-colors">GitHub</span>
+                            <span class="text-slate-500 dark:text-slate-400 text-sm">Code Repositories</span>
+                        </div>
+                    </div>
+                    <div class="text-slate-300 dark:text-slate-600 group-hover:text-primary transition-colors z-10">
+                        <span class="material-symbols-outlined">arrow_outward</span>
+                    </div>
+                </a>
+                <!-- Resume Card -->
+                <a class="group relative flex items-center justify-between p-5 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-primary dark:hover:border-primary transition-all duration-300 transform hover:-translate-y-1 overflow-hidden"
+                    href="#">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-primary/5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out">
+                    </div>
+                    <div class="flex items-center gap-4 z-10">
+                        <div
+                            class="size-12 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform duration-300">
+                            <span class="material-symbols-outlined">description</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span
+                                class="text-slate-900 dark:text-white font-bold text-lg group-hover:text-primary transition-colors">Resume
+                                / CV</span>
+                            <span class="text-slate-500 dark:text-slate-400 text-sm">Download PDF</span>
+                        </div>
+                    </div>
+                    <div class="text-slate-300 dark:text-slate-600 group-hover:text-primary transition-colors z-10">
+                        <span class="material-symbols-outlined">download</span>
+                    </div>
+                </a>
+            </div>
+            <!-- Mini Footer inside main area for context -->
+            <div class="mt-12 flex justify-center gap-6">
+                <a class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" href="#">
+                    <span class="sr-only">Twitter</span>
+                    <!-- Simplified Icon for Twitter/X -->
+                    <span class="material-symbols-outlined">chat_bubble</span>
+                </a>
+                <a class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" href="#">
+                    <span class="sr-only">Instagram</span>
+                    <span class="material-symbols-outlined">photo_camera</span>
+                </a>
+                <a class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors" href="#">
+                    <span class="sr-only">Dribbble</span>
+                    <span class="material-symbols-outlined">brush</span>
+                </a>
+            </div>
+            <p class="mt-6 text-center text-xs text-slate-400 dark:text-slate-500">
+                © 2024 Aadit Chandra. All rights reserved.
+            </p>
+        </div>
+    </main>
+    <footer
+        class="w-full text-center py-6 border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm">
+        <div class="flex flex-wrap items-center justify-center gap-6 text-sm">
+            <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Privacy
+                Policy</a>
+            <span class="text-slate-300 dark:text-slate-700">•</span>
+            <a class="text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Terms of
+                Service</a>
+        </div>
+    </footer>
+</body>
+
+</html>

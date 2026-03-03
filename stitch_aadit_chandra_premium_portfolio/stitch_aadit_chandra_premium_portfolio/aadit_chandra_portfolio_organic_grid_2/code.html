@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aadit Chandra | Interactive Liquid Portfolio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,600;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#3B82F6", 
+                        "primary-glow": "#60A5FA",
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#0A0A0A", 
+                        "surface-light": "#F3F4F6",
+                        "surface-dark": "#171717",
+                        "text-light": "#1F2937",
+                        "text-dark": "#E5E7EB",
+                        "muted-light": "#6B7280",
+                        "muted-dark": "#9CA3AF",
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'liquid-pulse': 'liquid 8s ease-in-out infinite',
+                        'ripple-splash': 'ripple 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards',
+                        'text-distort': 'textBlur 1.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        liquid: {
+                            '0%, 100%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' },
+                            '50%': { borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%' },
+                        },
+                        ripple: {
+                            '0%': { opacity: '1', transform: 'scale(0)' },
+                            '100%': { opacity: '0', transform: 'scale(4)' },
+                        },
+                        textBlur: {
+                            '0%': { filter: 'blur(0px) skewX(0deg)', transform: 'scale(1)' },
+                            '20%': { filter: 'blur(4px) skewX(-5deg)', transform: 'scale(1.02)' },
+                            '100%': { filter: 'blur(0px) skewX(0deg)', transform: 'scale(1)' },
+                        }
+                    }
+                },
+            },
+        };
+    </script>
+<style>
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .masonry-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        ::-webkit-scrollbar {
+            width: 0px; 
+            background: transparent; 
+        }
+        .text-outline {
+             -webkit-text-stroke: 1px currentColor;
+             color: transparent;
+        }.liquid-hover-target {
+            filter: url('#liquid-filter-sm'); 
+            transition: all 0.5s ease;
+        }
+        .liquid-container:active .liquid-hover-target {
+            animation: liquid-click 1s ease-out;
+        }
+        .hero-liquid-trigger:active ~ .hero-headline {
+            animation: textBlur 1.5s ease-out forwards;
+        }.timeline-container {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 40;
+            mix-blend-mode: difference;
+        }
+        .timeline-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(156, 163, 175, 0.3);
+            z-index: -1;
+        }
+        .timeline-progress {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            background: #3B82F6;
+            height: 35%;
+            box-shadow: 0 0 10px #3B82F6;
+            border-radius: 99px;
+            transition: height 0.1s linear;
+        }
+        .timeline-dot {
+            width: 8px;
+            height: 8px;
+            background: #3B82F6;
+            border-radius: 50%;
+            position: absolute;
+            top: 35%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px 2px #3B82F6;
+        }
+        .timeline-year {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: #9CA3AF;
+            background: transparent;
+            padding: 2px 0;
+            transition: color 0.3s;
+        }
+        .timeline-year.active {
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        .deco-shape {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.6;
+            pointer-events: none;
+        }.ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0);
+            pointer-events: none;
+            z-index: 50;
+        }
+        .click-active .ripple-effect {
+            animation: ripple 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }@keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 0.4;
+                backdrop-filter: blur(2px) contrast(1.2);
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+                backdrop-filter: blur(0px) contrast(1);
+            }
+        }
+        @keyframes liquid-click {
+             0% { filter: url('#liquid-filter-intense'); transform: scale(0.98); }
+             50% { filter: url('#liquid-filter-extreme'); transform: scale(1.02); }
+             100% { filter: url('#liquid-filter-sm'); transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark font-sans transition-colors duration-300 antialiased selection:bg-primary selection:text-white relative overflow-x-hidden">
+<svg class="hidden">
+<defs>
+<filter id="liquid-filter-sm">
+<feTurbulence baseFrequency="0.01 0.02" numOctaves="3" result="noise" type="fractalNoise"></feTurbulence>
+<feDisplacementMap in="SourceGraphic" in2="noise" scale="10"></feDisplacementMap>
+</filter>
+<filter id="liquid-filter-intense">
+<feTurbulence baseFrequency="0.02 0.05" numOctaves="4" result="noise" type="fractalNoise"></feTurbulence>
+<feDisplacementMap in="SourceGraphic" in2="noise" scale="60"></feDisplacementMap>
+</filter>
+<filter id="liquid-filter-extreme">
+<feTurbulence baseFrequency="0.03 0.08" numOctaves="5" result="noise" type="fractalNoise"></feTurbulence>
+<feDisplacementMap in="SourceGraphic" in2="noise" scale="100"></feDisplacementMap>
+</filter>
+</defs>
+</svg>
+<div class="timeline-container hidden lg:flex">
+<div class="timeline-line"></div>
+<div class="timeline-progress"></div>
+<div class="timeline-dot"></div>
+<div class="flex flex-col h-full justify-between items-center py-4">
+<span class="timeline-year active">2025</span>
+<span class="timeline-year">2024</span>
+<span class="timeline-year">2022</span>
+<span class="timeline-year">2021</span>
+</div>
+</div>
+<div class="deco-shape top-[15%] left-[5%] w-24 h-24 bg-gradient-to-br from-blue-200 to-purple-200 dark:from-blue-900 dark:to-purple-900 rounded-full blur-xl animate-float"></div>
+<div class="deco-shape top-[45%] right-[10%] w-32 h-32 bg-gradient-to-tr from-emerald-200 to-cyan-200 dark:from-emerald-900 dark:to-cyan-900 rounded-full blur-2xl animate-float-delayed"></div>
+<header class="fixed top-0 left-0 w-full p-6 z-40 mix-blend-difference text-white dark:text-white pointer-events-none">
+<div class="flex justify-between items-center">
+<a class="pointer-events-auto group" href="#">
+<span class="material-symbols-outlined text-4xl group-hover:rotate-90 transition-transform duration-500">
+                cyclone
+            </span>
+</a>
+<button class="pointer-events-auto p-2 rounded-full hover:bg-white/10 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-symbols-outlined">contrast</span>
+</button>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 pb-32 relative z-10">
+<section class="min-h-screen flex flex-col justify-end pb-20 pt-32 relative group/hero" id="home">
+<div class="absolute inset-0 z-[-1] overflow-hidden pointer-events-auto cursor-pointer active:cursor-grabbing hero-liquid-trigger" onclick="
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple-effect';
+            ripple.style.left = `${event.offsetX}px`;
+            ripple.style.top = `${event.offsetY}px`;
+            this.appendChild(ripple);
+            this.classList.add('click-active');
+            setTimeout(() =&gt; {
+                ripple.remove();
+                this.classList.remove('click-active');
+            }, 1200);
+        ">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-liquid-pulse transition-all duration-700 active:scale-105 active:blur-[60px]"></div>
+</div>
+<div class="relative z-10 hero-headline pointer-events-none transition-all duration-500">
+<h1 class="text-[12vw] leading-[0.85] font-bold tracking-tighter text-text-light dark:text-text-dark mb-8 mix-blend-overlay opacity-90 transition-all duration-1000 group-active/hero:skew-x-3 group-active/hero:blur-sm group-active/hero:scale-105">
+                AADIT<br/>CHANDRA
+            </h1>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-end relative z-20 pointer-events-none">
+<div class="md:col-span-5 text-lg md:text-xl text-muted-light dark:text-muted-dark leading-relaxed space-y-6 pointer-events-auto">
+<p>Computer Science student at <span class="text-text-light dark:text-text-dark font-medium">BITS Pilani Dubai</span>. Crafting digital experiences that merge functionality with aesthetic precision.</p>
+<div class="flex items-center gap-2 text-primary">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+<span class="text-sm font-semibold uppercase tracking-widest">Open to Work</span>
+</div>
+</div>
+<div class="md:col-span-7 pointer-events-auto">
+<div class="aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl relative group cursor-pointer active:scale-[0.98] transition-all duration-300" onclick="this.querySelector('.liquid-img').style.filter='url(#liquid-filter-extreme)'; setTimeout(() =&gt; { this.querySelector('.liquid-img').style.filter='url(#liquid-filter-sm)' }, 1200)">
+<div class="absolute inset-0 bg-gray-900">
+<img alt="Abstract liquid texture" class="liquid-img w-full h-full object-cover opacity-80 mix-blend-screen transition-all duration-[2s] ease-out hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl9ijIrC6TEbFLrYJqcbjghNj0yQMQGYv6bJ0_b-icCSWFTs-dPbelUWNi6AXTnUYlYh8_OX5rXwlRi22CBZxI92jpn6Ju0m4EE74WF4zYKP0UIgbX8Ne9EujXmEpa107XbIHA3XO4xDTrRDbXvpc15UF2cDabcQkpB7fOOQte8r6CqECVCD3TGFlpeREWx2RRk_N-DfiATG1XTkq2owu6f7Y3YOKqQQ0Wzu0vTeHP18sWIMSw7rYVBnEbvkveigOiEBk89aXiY54" style="filter: url(#liquid-filter-sm); transition: filter 1s ease-out;"/>
+<div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+<div class="w-20 h-20 rounded-full border border-white/30 backdrop-blur-sm flex items-center justify-center text-white text-xs tracking-widest uppercase animate-pulse">
+                                Click Me
+                            </div>
+</div>
+</div>
+</div>
+<div class="flex justify-between mt-4 text-sm font-mono text-muted-light dark:text-muted-dark">
+<span>Based in Dubai, UAE</span>
+<span>(SCROLL)</span>
+</div>
+</div>
+</div>
+</section>
+<div class="h-24"></div>
+<section class="grid grid-cols-1 md:grid-cols-12 gap-12 py-16 border-t border-gray-200 dark:border-gray-800 relative">
+<div class="absolute -top-10 left-10 w-16 h-16 opacity-80 animate-float hidden md:block">
+<img alt="3D Abstract Shape" class="w-full h-full object-contain drop-shadow-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl9ijIrC6TEbFLrYJqcbjghNj0yQMQGYv6bJ0_b-icCSWFTs-dPbelUWNi6AXTnUYlYh8_OX5rXwlRi22CBZxI92jpn6Ju0m4EE74WF4zYKP0UIgbX8Ne9EujXmEpa107XbIHA3XO4xDTrRDbXvpc15UF2cDabcQkpB7fOOQte8r6CqECVCD3TGFlpeREWx2RRk_N-DfiATG1XTkq2owu6f7Y3YOKqQQ0Wzu0vTeHP18sWIMSw7rYVBnEbvkveigOiEBk89aXiY54"/>
+</div>
+<div class="md:col-span-3">
+<h2 class="text-3xl font-serif italic text-text-light dark:text-text-dark">Now</h2>
+</div>
+<div class="md:col-span-9 space-y-8">
+<div class="group">
+<h3 class="text-xl font-bold mb-2 flex items-center gap-2">
+                        Researching Systems Architecture <span class="material-symbols-outlined text-primary text-sm">north_east</span>
+</h3>
+<p class="text-muted-light dark:text-muted-dark max-w-2xl">Currently diving deep into distributed systems and microservices patterns for my senior thesis.</p>
+</div>
+<div class="group">
+<h3 class="text-xl font-bold mb-2 flex items-center gap-2">
+                        Building "FlowState" <span class="material-symbols-outlined text-primary text-sm">north_east</span>
+</h3>
+<p class="text-muted-light dark:text-muted-dark max-w-2xl">Developing a productivity timer app focused on minimalistic design and haptic feedback for iOS.</p>
+</div>
+<div class="group">
+<h3 class="text-xl font-bold mb-2 flex items-center gap-2">
+                        Reading
+                    </h3>
+<p class="text-muted-light dark:text-muted-dark max-w-2xl">"The Pragmatic Programmer" by Andy Hunt and Dave Thomas. Refining my philosophy on code craftsmanship.</p>
+</div>
+</div>
+</section>
+<section class="py-24 relative" id="work">
+<div class="flex flex-col md:flex-row justify-between items-baseline mb-16 relative z-10">
+<h2 class="text-5xl md:text-7xl font-bold tracking-tight mb-4 md:mb-0">Selected<br/>Works</h2>
+<p class="text-muted-light dark:text-muted-dark max-w-sm text-right md:text-left">A curation of projects ranging from web applications to algorithmic research.</p>
+</div>
+<div class="absolute right-0 top-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="masonry-grid">
+<div class="group cursor-pointer space-y-4 liquid-container" onclick="
+                const target = this.querySelector('.liquid-hover-target');
+                target.style.filter = 'url(#liquid-filter-intense)';
+                target.style.transform = 'scale(1.05)';
+                setTimeout(() =&gt; {
+                    target.style.filter = 'url(#liquid-filter-sm)';
+                    target.style.transform = 'scale(1)';
+                }, 800);
+            ">
+<div class="rounded-2xl overflow-hidden bg-surface-light dark:bg-surface-dark aspect-[4/3] relative shadow-lg">
+<div class="liquid-hover-target w-full h-full">
+<img alt="App interface design" class="w-full h-full object-cover transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTc58oqRpDue3I0of0lVnnCsntXxAQtct04vyokomY7FYDZeQ8TTsZYTxTxcPB0nb4Vg0X7qdX7BWriEQLPLH5gNS4_2p6v2afxArpRGZeyNrnPG1j9HO6qmOfUhdJjpTVnRBkg2_gVQFD37CVQReAiZ-xTStcHZN0FvVeRbyZsQoEnvZd17b8Cc1zXZhbDuvMZG2zqqnJ2H1o8XUNGbL5MhPIkChia73x06fw2dwNsWoH8NWxTTZlPNRsnhLKn_18SlamKSYMRWU"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6 pointer-events-none">
+<span class="text-white font-mono text-sm">View Case Study</span>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-active:opacity-100 pointer-events-none transition-opacity duration-300">
+<div class="w-16 h-16 border-2 border-white/50 rounded-full animate-ping"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center">
+<h3 class="text-2xl font-bold group-hover:text-primary transition-colors">Nexus Dashboard</h3>
+<span class="text-sm font-mono border border-gray-300 dark:border-gray-700 px-2 py-1 rounded-full">2023</span>
+</div>
+<p class="text-muted-light dark:text-muted-dark mt-2">React • TypeScript • Tailwind</p>
+</div>
+</div>
+<div class="group cursor-pointer space-y-4 md:mt-24 liquid-container" onclick="
+                const target = this.querySelector('.liquid-hover-target');
+                target.style.filter = 'url(#liquid-filter-intense)';
+                target.style.transform = 'scale(1.05)';
+                setTimeout(() =&gt; {
+                    target.style.filter = 'url(#liquid-filter-sm)';
+                    target.style.transform = 'scale(1)';
+                }, 800);
+            ">
+<div class="rounded-2xl overflow-hidden bg-surface-light dark:bg-surface-dark aspect-[3/4] relative shadow-lg">
+<div class="liquid-hover-target w-full h-full">
+<img alt="Code editor screen" class="w-full h-full object-cover transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC-aC0bV02azT8K-SCOSC6WfyxJuVFQOSKsrDokPPZZpjNS2I6HGc2P7DrGvKx9-3Z1cQI0-tRe8ruWqewwtmC1RGdPbqMx0rLZkmqKV1JGd988AXsf4yT36aDlAMiSlGd52IEiaf3gYEoj9dqezUH-nDP3JNVO8hA8H7dvgzqh4tLsWQy51WyzkIo6izzMuXKzvUFQlF9UY32F8eyrO4m7O82zXCpi-v3YmsCv-ynWoTu_QBw-0y9BGBAGi0bGMWc4RaNB4ELN84"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6 pointer-events-none">
+<span class="text-white font-mono text-sm">View Repository</span>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-active:opacity-100 pointer-events-none transition-opacity duration-300">
+<div class="w-16 h-16 border-2 border-white/50 rounded-full animate-ping"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center">
+<h3 class="text-2xl font-bold group-hover:text-primary transition-colors">Algorithmic Trading Bot</h3>
+<span class="text-sm font-mono border border-gray-300 dark:border-gray-700 px-2 py-1 rounded-full">2022</span>
+</div>
+<p class="text-muted-light dark:text-muted-dark mt-2">Python • Pandas • AWS</p>
+</div>
+</div>
+<div class="group cursor-pointer space-y-4 liquid-container" onclick="
+                const target = this.querySelector('.liquid-hover-target');
+                target.style.filter = 'url(#liquid-filter-intense)';
+                target.style.transform = 'scale(1.05)';
+                setTimeout(() =&gt; {
+                    target.style.filter = 'url(#liquid-filter-sm)';
+                    target.style.transform = 'scale(1)';
+                }, 800);
+            ">
+<div class="rounded-2xl overflow-hidden bg-surface-light dark:bg-surface-dark aspect-square relative shadow-lg">
+<div class="liquid-hover-target w-full h-full">
+<img alt="Abstract 3D rendering" class="w-full h-full object-cover transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl9ijIrC6TEbFLrYJqcbjghNj0yQMQGYv6bJ0_b-icCSWFTs-dPbelUWNi6AXTnUYlYh8_OX5rXwlRi22CBZxI92jpn6Ju0m4EE74WF4zYKP0UIgbX8Ne9EujXmEpa107XbIHA3XO4xDTrRDbXvpc15UF2cDabcQkpB7fOOQte8r6CqECVCD3TGFlpeREWx2RRk_N-DfiATG1XTkq2owu6f7Y3YOKqQQ0Wzu0vTeHP18sWIMSw7rYVBnEbvkveigOiEBk89aXiY54"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6 pointer-events-none">
+<span class="text-white font-mono text-sm">View Experiment</span>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-active:opacity-100 pointer-events-none transition-opacity duration-300">
+<div class="w-16 h-16 border-2 border-white/50 rounded-full animate-ping"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center">
+<h3 class="text-2xl font-bold group-hover:text-primary transition-colors">WebGL Experiments</h3>
+<span class="text-sm font-mono border border-gray-300 dark:border-gray-700 px-2 py-1 rounded-full">2023</span>
+</div>
+<p class="text-muted-light dark:text-muted-dark mt-2">Three.js • Shader GLSL</p>
+</div>
+</div>
+<div class="group cursor-pointer space-y-4 md:mt-12 liquid-container" onclick="
+                const target = this.querySelector('.liquid-hover-target');
+                target.style.filter = 'url(#liquid-filter-intense)';
+                target.style.transform = 'scale(1.05)';
+                setTimeout(() =&gt; {
+                    target.style.filter = 'url(#liquid-filter-sm)';
+                    target.style.transform = 'scale(1)';
+                }, 800);
+            ">
+<div class="rounded-2xl overflow-hidden bg-surface-light dark:bg-surface-dark aspect-[16/10] relative shadow-lg">
+<div class="liquid-hover-target w-full h-full">
+<img alt="Minimalist website layout" class="w-full h-full object-cover transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdN3RPIuN99NfSvJMc113Fl9rVq_cg5krxOCr0T4yPKM7PsKUM87QtqsivqdzzB6rVYPy3OxtODR79HQ94-_i7jGJuiBjdW5tybq9ftMiGE6v_BDlBVe3lUyrEZGV_gX6ipk4_0JuQRpoJ6GTOe9GVvdT7exhb8KRrFujWCKdqUaPiuJNmmYeorBZk7ceTW_xA5E0RO6D4lpUE8q8YRWXHFhN6KGYtoWPyogDx5PdUzwA207CKiUZyjci0MnhzUWrxFSd8BLbWzrQ"/>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6 pointer-events-none">
+<span class="text-white font-mono text-sm">View Prototype</span>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-active:opacity-100 pointer-events-none transition-opacity duration-300">
+<div class="w-16 h-16 border-2 border-white/50 rounded-full animate-ping"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center">
+<h3 class="text-2xl font-bold group-hover:text-primary transition-colors">University Portal Redesign</h3>
+<span class="text-sm font-mono border border-gray-300 dark:border-gray-700 px-2 py-1 rounded-full">2021</span>
+</div>
+<p class="text-muted-light dark:text-muted-dark mt-2">UI/UX • Figma • Prototyping</p>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 border-t border-gray-200 dark:border-gray-800 relative" id="about">
+<div class="absolute left-[-100px] top-[20%] w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center relative z-10">
+<div class="relative">
+<div class="absolute -bottom-8 -right-8 w-20 h-20 z-20 animate-bounce delay-700">
+<img alt="3D Clay Icon" class="w-full h-full object-contain drop-shadow-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl9ijIrC6TEbFLrYJqcbjghNj0yQMQGYv6bJ0_b-icCSWFTs-dPbelUWNi6AXTnUYlYh8_OX5rXwlRi22CBZxI92jpn6Ju0m4EE74WF4zYKP0UIgbX8Ne9EujXmEpa107XbIHA3XO4xDTrRDbXvpc15UF2cDabcQkpB7fOOQte8r6CqECVCD3TGFlpeREWx2RRk_N-DfiATG1XTkq2owu6f7Y3YOKqQQ0Wzu0vTeHP18sWIMSw7rYVBnEbvkveigOiEBk89aXiY54"/>
+</div>
+<div class="absolute -top-4 -left-4 w-full h-full border-2 border-primary rounded-2xl hidden md:block"></div>
+<img alt="Portrait of Aadit" class="rounded-2xl grayscale hover:grayscale-0 transition-all duration-700 w-full object-cover aspect-[3/4] relative z-10 shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD27K-mTsFh_Db6mJ1Z-tbUXycrHv09hXdDSdxQqllOdlwnQ0O1E8owWkbtS2xKla61BtxZORTfoU5P_8Nz_BXMjDf56LRv0zxw1j3uJ8Qi4s6IUEmV_y-T7aBLIDk_vdaHwLfUkME_WwQeH9w0Xr0hfiJj4HaOvKLvHG6AjlYjksrZrDDF-1dcNNoFbRMSS3SKeLstsPcds4f1holykwVVVzRcZQ_DHvKIkIRG-iPrM-vzPMM4F3hdka8wvAjSz2kY6DdbxzGGJLA"/>
+</div>
+<div class="space-y-8">
+<h2 class="text-4xl md:text-5xl font-bold leading-tight">I bridge the gap between <span class="text-primary">logic</span> and <span class="font-serif italic font-normal text-outline stroke-current">imagination</span>.</h2>
+<div class="prose prose-lg dark:prose-invert text-muted-light dark:text-muted-dark">
+<p>
+                            Hey, I'm Aadit. As a Computer Science student at BITS Pilani Dubai, I've spent the last 3 years exploring the intersection of robust backend engineering and fluid frontend experiences.
+                        </p>
+<p>
+                            My approach is simple: clean code, scalable architecture, and an obsession with user experience. When I'm not coding, I'm analyzing market trends or exploring the architectural wonders of the UAE.
+                        </p>
+</div>
+<div class="flex flex-wrap gap-4 pt-4">
+<span class="px-4 py-2 bg-surface-light dark:bg-surface-dark rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-default">Java</span>
+<span class="px-4 py-2 bg-surface-light dark:bg-surface-dark rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-default">Python</span>
+<span class="px-4 py-2 bg-surface-light dark:bg-surface-dark rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-default">React</span>
+<span class="px-4 py-2 bg-surface-light dark:bg-surface-dark rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-default">Node.js</span>
+<span class="px-4 py-2 bg-surface-light dark:bg-surface-dark rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors cursor-default">Machine Learning</span>
+</div>
+<a class="inline-flex items-center gap-2 text-primary font-semibold hover:gap-4 transition-all group" href="#">
+                        Read more about me <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<section class="py-24 max-w-4xl mx-auto">
+<h2 class="text-3xl font-serif italic mb-12 text-center text-text-light dark:text-text-dark">Journey</h2>
+<div class="relative border-l border-gray-200 dark:border-gray-800 ml-3 md:ml-6 space-y-12 pl-8 md:pl-12">
+<div class="relative">
+<span class="absolute -left-[41px] md:-left-[57px] top-1 h-5 w-5 rounded-full border-4 border-white dark:border-background-dark bg-primary shadow-[0_0_10px_rgba(59,130,246,0.5)]"></span>
+<span class="text-sm font-mono text-primary mb-2 block">2024</span>
+<h3 class="text-xl font-bold">Research Intern at TechGiant Corp</h3>
+<p class="text-muted-light dark:text-muted-dark mt-2">Optimized database query performance by 40% using Redis caching strategies.</p>
+</div>
+<div class="relative">
+<span class="absolute -left-[41px] md:-left-[57px] top-1 h-5 w-5 rounded-full border-4 border-white dark:border-background-dark bg-gray-300 dark:bg-gray-600"></span>
+<span class="text-sm font-mono text-muted-light dark:text-muted-dark mb-2 block">2022</span>
+<h3 class="text-xl font-bold">Hackathon Winner: HackDubai</h3>
+<p class="text-muted-light dark:text-muted-dark mt-2">Built an AI-driven waste management solution. Awarded 'Best Technical Implementation'.</p>
+</div>
+<div class="relative">
+<span class="absolute -left-[41px] md:-left-[57px] top-1 h-5 w-5 rounded-full border-4 border-white dark:border-background-dark bg-gray-300 dark:bg-gray-600"></span>
+<span class="text-sm font-mono text-muted-light dark:text-muted-dark mb-2 block">2021</span>
+<h3 class="text-xl font-bold">Started CS Degree at BITS Pilani</h3>
+<p class="text-muted-light dark:text-muted-dark mt-2">Moved to Dubai. Majoring in Computer Science with a minor in Data Science.</p>
+</div>
+</div>
+</section>
+<footer class="py-24 mt-12 bg-surface-light dark:bg-surface-dark -mx-6 px-6 rounded-t-[3rem] relative overflow-hidden" id="contact">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none"></div>
+<div class="max-w-7xl mx-auto relative z-10">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+<div>
+<h2 class="text-6xl font-bold tracking-tighter mb-8">Let's build<br/>something<br/><span class="text-outline stroke-text-light dark:stroke-text-dark">together.</span></h2>
+<a class="text-2xl underline decoration-primary decoration-2 underline-offset-4 hover:text-primary transition-colors" href="mailto:aadit@example.com">aadit@example.com</a>
+</div>
+<div class="flex flex-col justify-end items-start md:items-end">
+<div class="space-y-4 text-right">
+<a class="block text-xl hover:text-primary transition-colors group flex items-center justify-end gap-2" href="#">
+                            LinkedIn 
+                            <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">arrow_outward</span>
+</a>
+<a class="block text-xl hover:text-primary transition-colors group flex items-center justify-end gap-2" href="#">
+                            GitHub
+                            <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">arrow_outward</span>
+</a>
+<a class="block text-xl hover:text-primary transition-colors group flex items-center justify-end gap-2" href="#">
+                            Twitter
+                            <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">arrow_outward</span>
+</a>
+<a class="block text-xl hover:text-primary transition-colors group flex items-center justify-end gap-2" href="#">
+                            Resume
+                            <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">download</span>
+</a>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center mt-24 pt-8 border-t border-gray-300 dark:border-gray-700 text-sm text-muted-light dark:text-muted-dark">
+<p>© 2024 Aadit Chandra. All rights reserved.</p>
+<p>Designed &amp; Built with Tailwind CSS</p>
+</div>
+</div>
+</footer>
+</main>
+<div class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+<nav class="bg-white/80 dark:bg-surface-dark/80 backdrop-blur-md shadow-2xl rounded-full px-6 py-3 border border-gray-200 dark:border-gray-700 flex items-center gap-2">
+<a class="px-4 py-2 text-sm font-medium rounded-full hover:bg-surface-light dark:hover:bg-white/10 transition-colors" href="#home">Home</a>
+<a class="px-4 py-2 text-sm font-medium rounded-full hover:bg-surface-light dark:hover:bg-white/10 transition-colors" href="#work">Work</a>
+<a class="px-4 py-2 text-sm font-medium rounded-full hover:bg-surface-light dark:hover:bg-white/10 transition-colors" href="#about">About</a>
+<a class="px-4 py-2 text-sm font-medium bg-primary text-white rounded-full hover:bg-blue-600 transition-colors shadow-lg shadow-blue-500/30" href="#contact">Contact</a>
+</nav>
+</div>
+</body></html>
