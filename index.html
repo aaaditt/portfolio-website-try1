@@ -284,11 +284,11 @@
             z-index: 99999;
             pointer-events: none;
             transform: scale(0);
-            transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+            transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
         }
 
         .page-transition-overlay.expand {
-            transform: scale(500);
+            transform: scale(800);
         }
 
         /* Flash prevention for reverse transition */
@@ -304,6 +304,12 @@
         }
     </style>
     <script>
+        // Check for saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
         if (sessionStorage.getItem('returnTransition') === 'true') {
             document.documentElement.classList.add('is-returning');
         }
@@ -369,8 +375,10 @@
                     cyclone
                 </span>
             </a>
-            <button class="pointer-events-auto p-2 rounded-full hover:bg-white/10 transition-colors"
-                onclick="document.documentElement.classList.toggle('dark')">
+            <button class="pointer-events-auto p-2 rounded-full hover:bg-white/10 transition-colors" onclick="
+                    document.documentElement.classList.toggle('dark');
+                    localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+                ">
                 <span class="material-symbols-outlined">contrast</span>
             </button>
         </div>
@@ -392,7 +400,7 @@
             }, 1200);
         ">
                 <div
-                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] md:w-[90vw] md:h-[90vw] bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-liquid-pulse transition-all duration-700 active:scale-105 active:blur-[60px]">
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] h-[200vw] md:w-[150vw] md:h-[150vw] bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-liquid-pulse transition-all duration-700 active:scale-105 active:blur-[60px]">
                 </div>
             </div>
 
@@ -861,7 +869,7 @@
                     // Wait for animation to finish before navigating
                     setTimeout(() => {
                         window.location.href = this.href;
-                    }, 750);
+                    }, 1200);
                 });
             });
 
@@ -878,8 +886,8 @@
             if (sessionStorage.getItem('returnTransition') === 'true') {
                 sessionStorage.removeItem('returnTransition');
 
-                // Target the Contact button in the fixed bottom nav to shrink into
-                const targetBtn = document.querySelector('nav a[href="contact.html"]');
+                // Target the About button in the fixed bottom nav to shrink into
+                const targetBtn = document.querySelector('nav a[href="#about"]');
                 if (targetBtn) {
                     const rect = targetBtn.getBoundingClientRect();
                     const overlay = document.createElement('div');
